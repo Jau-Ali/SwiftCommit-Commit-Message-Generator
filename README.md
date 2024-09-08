@@ -1,10 +1,17 @@
+<div style="text-align: center;">
+
 # SwiftCommit
 
-## Features
+</div>
 
-### SwiftCommit is a VS Code extension that automatically generates commit messages using NLP.
+<div style="text-align: center; padding-bottom:10px">
 
-Key features include:
+### A VS Code extension that automatically generates commit messages using NLP.
+
+</div>
+
+
+## Key features include:
 
 - **Automatic Commit Messages**: Generate meaningful commit messages based on code diffs.
 - **Real-time Integration**: Seamlessly integrates with VS Code’s version control system.

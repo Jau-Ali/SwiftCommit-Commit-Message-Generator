@@ -2,7 +2,7 @@
   "name": "swiftcommit",
   "displayName": "SwiftCommit",
   "description": "Automatically generates commit messages using NLP.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.93.0"
   },
@@ -17,15 +17,14 @@
     "commands": [
       {
         "command": "swiftcommit.generateMessage",
-        "title": "Generate Commit Message"
+        "title": "SwiftCommit"
       }
     ],
     "viewsContainers": {
       "scm": [
         {
           "id": "swiftcommitView",
-          "title": "SwiftCommit",
-          "icon": "images/logo-white.png"
+          "title": "SwiftCommit"
         }
       ]
     },
@@ -33,7 +32,7 @@
       "scm": [
         {
           "id": "swiftcommitView",
-          "name": "Generate Commit Message"
+          "name": "SwiftCommit"
         }
       ]
     },
@@ -43,8 +42,7 @@
           "command": "swiftcommit.generateMessage",
           "group": "navigation",
           "when": "scmProvider == git",
-          "title": "Generate Commit Message",
-          "icon": "images/logo-white.jpg"
+          "title": "SwiftCommit"
         }
       ]
     }

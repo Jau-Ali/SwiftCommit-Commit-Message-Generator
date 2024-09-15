@@ -1,26 +1,51 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as path from 'path';
+import * as fs from 'fs';
+import { exec } from 'child_process';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+function activate(context: vscode.ExtensionContext) {
+    const extensionPath = context.extensionPath;
+    const modelPath = path.join(extensionPath, 'swiftcommit_model');
+    const tokenizerPath = path.join(extensionPath, 'swiftcommit_tokenizer');
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "SwiftCommit" is now active!');
+    vscode.commands.registerCommand('swiftcommit.generateMessage', async () => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            vscode.window.showInformationMessage('No active text editor found.');
+            return;
+        }
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('SwiftCommit.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from swiftcommit-commit-message-generator!');
-	});
+        const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+        if (!workspaceFolder) {
+            vscode.window.showInformationMessage('No workspace folder found.');
+            return;
+        }
 
-	context.subscriptions.push(disposable);
+        const diff = await getStagedDiff(workspaceFolder);
+        const pythonScript = path.join(extensionPath, 'generate_commit_message.py');
+
+        exec(`python ${pythonScript} --model ${modelPath} --tokenizer ${tokenizerPath} --diff "${diff}"`, (err: Error | null, stdout: string, stderr: string) => {
+            if (err) {
+                vscode.window.showErrorMessage(`Error generating commit message: ${stderr}`);
+                return;
+            }
+            const message = stdout.trim();
+            vscode.window.showInformationMessage(`Generated Commit Message: ${message}`);
+        });
+    });
 }
 
-// This method is called when your extension is deactivated
-export function deactivate() {}
+function getStagedDiff(workspacePath: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const gitDiffCommand = `git diff --cached`;
+        exec(gitDiffCommand, { cwd: workspacePath }, (err: Error | null, stdout: string, stderr: string) => {
+            if (err) {
+                reject(`Error getting staged diff: ${stderr}`);
+                return;
+            }
+            resolve(stdout.trim());
+        });
+    });
+}
+
+exports.activate = activate;

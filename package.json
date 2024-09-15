@@ -81,5 +81,11 @@
     "type": "git",
     "url": "https://github.com/Jau-Ali/SwiftCommit-Commit-Message-Generator.git"
   },
-  "publisher": "SaliJau28"
+  "publisher": "SaliJau28",
+  "files": [
+    "dist",
+    "images",
+    "swiftcommit_model",
+    "swiftcommit_tokenizer"
+  ]
 }

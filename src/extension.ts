@@ -1,51 +1,66 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
-import * as fs from 'fs';
 import { exec } from 'child_process';
+import { promisify } from 'util';
+import * as path from 'path';
 
-function activate(context: vscode.ExtensionContext) {
-    const extensionPath = context.extensionPath;
-    const modelPath = path.join(extensionPath, 'swiftcommit_model');
-    const tokenizerPath = path.join(extensionPath, 'swiftcommit_tokenizer');
+const execPromise = promisify(exec);
 
-    vscode.commands.registerCommand('swiftcommit.generateMessage', async () => {
-        const editor = vscode.window.activeTextEditor;
-        if (!editor) {
-            vscode.window.showInformationMessage('No active text editor found.');
-            return;
-        }
-
-        const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+export function activate(context: vscode.ExtensionContext) {
+    let disposable = vscode.commands.registerCommand('swiftcommit.generateMessage', async () => {
+        const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
         if (!workspaceFolder) {
-            vscode.window.showInformationMessage('No workspace folder found.');
+            vscode.window.showErrorMessage('No workspace folder found.');
             return;
         }
 
-        const diff = await getStagedDiff(workspaceFolder);
-        const pythonScript = path.join(extensionPath, 'generate_commit_message.py');
+        const fileUri = vscode.window.activeTextEditor?.document.uri;
+        if (!fileUri) {
+            vscode.window.showErrorMessage('No file is currently open.');
+            return;
+        }
 
-        exec(`python ${pythonScript} --model ${modelPath} --tokenizer ${tokenizerPath} --diff "${diff}"`, (err: Error | null, stdout: string, stderr: string) => {
-            if (err) {
-                vscode.window.showErrorMessage(`Error generating commit message: ${stderr}`);
+        const filePath = fileUri.fsPath;
+        try {
+            // Execute git diff command for the current file
+            const { stdout, stderr } = await execPromise(`git diff HEAD ${filePath}`, {
+                cwd: workspaceFolder.uri.fsPath
+            });
+
+            if (stderr) {
+                console.error('Error:', stderr);
+                vscode.window.showErrorMessage(`Error fetching diff: ${stderr}`);
                 return;
             }
-            const message = stdout.trim();
-            vscode.window.showInformationMessage(`Generated Commit Message: ${message}`);
-        });
-    });
-}
 
-function getStagedDiff(workspacePath: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-        const gitDiffCommand = `git diff --cached`;
-        exec(gitDiffCommand, { cwd: workspacePath }, (err: Error | null, stdout: string, stderr: string) => {
-            if (err) {
-                reject(`Error getting staged diff: ${stderr}`);
-                return;
+            const diff = stdout.trim();
+            if (diff) {
+                console.log('Diff:', diff);
+
+                // Construct the path to the script
+                const scriptPath = path.join(__dirname, '../generate_commit_message.py');
+
+                // Escape double quotes in the diff argument
+                const escapedDiff = diff.replace(/"/g, '\\"');
+
+                // Call your model script here
+                const { stdout: message, stderr: scriptError } = await execPromise(`python "${scriptPath}" "${escapedDiff}"`);
+
+                if (scriptError) {
+                    console.error('Error:', scriptError);
+                    vscode.window.showErrorMessage(`Error generating commit message: ${scriptError}`);
+                    return;
+                }
+
+                console.log('Generated Commit Message:', message.trim());
+                vscode.window.showInformationMessage(`Generated Commit Message: ${message.trim()}`);
+            } else {
+                vscode.window.showInformationMessage('No changes to show.');
             }
-            resolve(stdout.trim());
-        });
+        } catch (error) {
+            console.error('Error fetching diff:', error);
+            vscode.window.showErrorMessage(`Error fetching diff: ${error}`);
+        }
     });
-}
 
-exports.activate = activate;
+    context.subscriptions.push(disposable);
+}

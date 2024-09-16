@@ -17,7 +17,7 @@
     "commands": [
       {
         "command": "swiftcommit.generateMessage",
-        "title": "SwiftCommit"
+        "title": "Generate Commit Message"
       }
     ],
     "viewsContainers": {
@@ -42,7 +42,7 @@
           "command": "swiftcommit.generateMessage",
           "group": "navigation",
           "when": "scmProvider == git",
-          "title": "SwiftCommit"
+          "title": "Generate Commit Message"
         }
       ]
     }

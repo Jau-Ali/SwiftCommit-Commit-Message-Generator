@@ -5,7 +5,7 @@ from transformers import BartTokenizer, BartForConditionalGeneration
 def generate_commit_message(diff):
     model_path = './swiftcommit_model'
     tokenizer_path = './swiftcommit_tokenizer'
-    
+
     if not (os.path.exists(model_path) and os.path.exists(tokenizer_path)):
         raise FileNotFoundError("Model or tokenizer path does not exist.")
 

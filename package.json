@@ -13,41 +13,42 @@
     "onCommand:swiftcommit.generateMessage"
   ],
   "main": "./dist/extension.js",
-  "contributes": {
+"contributes": {
     "commands": [
-      {
-        "command": "swiftcommit.generateMessage",
-        "title": "Generate Commit Message"
-      }
+        {
+            "command": "swiftcommit.generateMessage",
+            "title": "SwiftCommit"
+        }
     ],
     "viewsContainers": {
-      "scm": [
-        {
-          "id": "swiftcommitView",
-          "title": "SwiftCommit"
-        }
-      ]
+        "scm": [
+            {
+                "id": "swiftcommitViewContainer",
+                "title": "SwiftCommit"
+            }
+        ]
     },
     "views": {
-      "scm": [
-        {
-          "id": "swiftcommitView",
-          "name": "SwiftCommit"
-        }
-      ]
+        "scm": [
+            {
+                "id": "swiftcommitView",
+                "name": "Generated Commit Message"
+            }
+        ]
     },
     "menus": {
-      "scm/title": [
-        {
-          "command": "swiftcommit.generateMessage",
-          "group": "navigation",
-          "when": "scmProvider == git",
-          "title": "Generate Commit Message"
-        }
-      ]
+        "scm/title": [
+            {
+                "command": "swiftcommit.generateMessage",
+                "group": "navigation",
+                "when": "scmProvider == git",
+                "title": "Generate Commit Message"
+            }
+        ]
     }
+
   },
-  "icon": "images/my_icon.png",
+  "icon": "images/my-icon.png",
   "scripts": {
     "vscode:prepublish": "yarn run package",
     "compile": "yarn run check-types && yarn run lint && node esbuild.js",

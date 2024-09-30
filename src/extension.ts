@@ -2,10 +2,14 @@ import * as vscode from 'vscode';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import * as path from 'path';
+import { MessageProvider } from './messageProvider';
 
 const execPromise = promisify(exec);
 
 export function activate(context: vscode.ExtensionContext) {
+    const messageProvider = new MessageProvider();
+    vscode.window.registerTreeDataProvider('swiftcommitView', messageProvider);
+
     let disposable = vscode.commands.registerCommand('swiftcommit.generateMessage', async () => {
         const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
         if (!workspaceFolder) {
@@ -21,7 +25,6 @@ export function activate(context: vscode.ExtensionContext) {
 
         const filePath = fileUri.fsPath;
         try {
-            // Execute git diff command for the current file
             const { stdout, stderr } = await execPromise(`git diff HEAD ${filePath}`, {
                 cwd: workspaceFolder.uri.fsPath
             });
@@ -36,13 +39,8 @@ export function activate(context: vscode.ExtensionContext) {
             if (diff) {
                 console.log('Diff:', diff);
 
-                // Construct the path to the script
                 const scriptPath = path.join(__dirname, '../generate_commit_message.py');
-
-                // Escape double quotes in the diff argument
                 const escapedDiff = diff.replace(/"/g, '\\"');
-
-                // Call your model script here
                 const { stdout: message, stderr: scriptError } = await execPromise(`python "${scriptPath}" "${escapedDiff}"`);
 
                 if (scriptError) {
@@ -51,8 +49,15 @@ export function activate(context: vscode.ExtensionContext) {
                     return;
                 }
 
-                console.log('Generated Commit Message:', message.trim());
-                vscode.window.showInformationMessage(`Generated Commit Message: ${message.trim()}`);
+
+                const cleanedMessage = message
+                    .replace(/\s+/g, ' ')
+                    .trim();
+
+                console.log('Generated Commit Message:', cleanedMessage);
+
+
+                messageProvider.setMessage(cleanedMessage);
             } else {
                 vscode.window.showInformationMessage('No changes to show.');
             }

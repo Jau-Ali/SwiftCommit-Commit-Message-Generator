@@ -3,9 +3,11 @@ import os
 from transformers import BartTokenizer, BartForConditionalGeneration
 
 def generate_commit_message(diff):
-    model_path = './swiftcommit_model'
-    tokenizer_path = './swiftcommit_tokenizer'
+    # Load the model and tokenizer from the specified paths
+    model_path = "C:/xampp/htdocs/SwiftCommit-Commit-Message-Generator/SwiftCommit/swiftcommit_model"
+    tokenizer_path = "C:/xampp/htdocs/SwiftCommit-Commit-Message-Generator/SwiftCommit/swiftcommit_tokenizer"
 
+    # Check if model and tokenizer directories exist before loading
     if not (os.path.exists(model_path) and os.path.exists(tokenizer_path)):
         raise FileNotFoundError("Model or tokenizer path does not exist.")
 
@@ -16,6 +18,10 @@ def generate_commit_message(diff):
         raise RuntimeError(f"Error loading model or tokenizer: {e}")
 
     try:
+
+        diff = diff.replace('\n', ' ').strip()
+
+
         inputs = tokenizer(diff, return_tensors='pt', truncation=True, max_length=1024)
         outputs = model.generate(
             inputs['input_ids'],
@@ -27,8 +33,11 @@ def generate_commit_message(diff):
             decoder_start_token_id=tokenizer.pad_token_id
         )
         message = tokenizer.decode(outputs[0], skip_special_tokens=True)
-        message = message.replace("#<I>", "")
-        return message.strip()
+
+
+        message = message.replace("#<I>", "").strip()
+
+        return message
     except Exception as e:
         raise RuntimeError(f"Error generating commit message: {e}")
 

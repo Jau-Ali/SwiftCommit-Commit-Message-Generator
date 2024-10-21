@@ -4,8 +4,9 @@ from transformers import BartTokenizer, BartForConditionalGeneration
 
 def generate_commit_message(diff):
     # Load the model and tokenizer from the specified paths
-    model_path = "C:/xampp/htdocs/SwiftCommit-Commit-Message-Generator/SwiftCommit/swiftcommit_model"
-    tokenizer_path = "C:/xampp/htdocs/SwiftCommit-Commit-Message-Generator/SwiftCommit/swiftcommit_tokenizer"
+    model_path = "C:/xampp/htdocs/SwiftCommit-Commit-Message-Generator/SwiftCommit-/swiftcommit_model"
+    tokenizer_path = "C:/xampp/htdocs/SwiftCommit-Commit-Message-Generator/SwiftCommit-/swiftcommit_tokenizer"
+
 
     # Check if model and tokenizer directories exist before loading
     if not (os.path.exists(model_path) and os.path.exists(tokenizer_path)):

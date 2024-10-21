@@ -17,7 +17,17 @@
     "commands": [
         {
             "command": "swiftcommit.generateMessage",
-            "title": "SwiftCommit"
+            "title": "SwiftCommit",
+            "icon": "$(git-commit)"
+        },
+        {
+          "command": "swiftcommitView.copyMessageButton",
+          "title": "Copy Message" ,
+          "icon": "$(copy)"
+        },
+        {
+          "command": "swiftcommitView.copyToClipboard",
+          "title": "Copy to Clipboard"
         }
     ],
     "viewsContainers": {
@@ -44,6 +54,13 @@
                 "when": "scmProvider == git",
                 "title": "Generate Commit Message"
             }
+        ],
+        "view/title": [
+          {
+            "command": "swiftcommitView.copyMessageButton",
+            "when": "scmProvider == git",
+            "group": "navigation"
+          }
         ]
     }
 

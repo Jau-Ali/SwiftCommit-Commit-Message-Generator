@@ -2,7 +2,7 @@
   "name": "swiftcommit",
   "displayName": "SwiftCommit",
   "description": "Automatically generates commit messages using NLP.",
-  "version": "0.0.5",
+  "version": "0.0.8",
   "engines": {
     "vscode": "^1.93.0"
   },

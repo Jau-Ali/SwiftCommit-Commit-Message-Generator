@@ -1,48 +1,48 @@
 import sys
 import os
-from transformers import BartTokenizer, BartForConditionalGeneration
+from transformers import RobertaTokenizer, T5ForConditionalGeneration
 
 def generate_commit_message(diff):
-    # Load the model and tokenizer from the specified paths
-    model_path = "C:/xampp/htdocs/SwiftCommit-Commit-Message-Generator/SwiftCommit/swiftcommit_model"
-    tokenizer_path = "C:/xampp/htdocs/SwiftCommit-Commit-Message-Generator/SwiftCommit/swiftcommit_tokenizer"
+    model_path = "C:/xampp/htdocs/SwiftCommit-Commit-Message-Generator/SwiftCommit/codeT5-model"
+    tokenizer_path = "C:/xampp/htdocs/SwiftCommit-Commit-Message-Generator/SwiftCommit/codeT5-tokenizer"
 
-    # Check if model and tokenizer directories exist before loading
     if not (os.path.exists(model_path) and os.path.exists(tokenizer_path)):
         raise FileNotFoundError("Model or tokenizer path does not exist.")
 
-    try:
-        tokenizer = BartTokenizer.from_pretrained(tokenizer_path)
-        model = BartForConditionalGeneration.from_pretrained(model_path)
-    except Exception as e:
-        raise RuntimeError(f"Error loading model or tokenizer: {e}")
+    tokenizer = RobertaTokenizer.from_pretrained(tokenizer_path)
+    model = T5ForConditionalGeneration.from_pretrained(model_path)
 
-    try:
-        diff = diff.replace('\n', ' ').strip()
-        inputs = tokenizer(diff, return_tensors='pt', truncation=True, max_length=1024)
-        outputs = model.generate(
-            inputs['input_ids'],
-            max_new_tokens=150,
-            num_beams=4,
-            early_stopping=True,
-            no_repeat_ngram_size=2,
-            length_penalty=2.0,
-            decoder_start_token_id=tokenizer.pad_token_id
-        )
-        message = tokenizer.decode(outputs[0], skip_special_tokens=True)
-        message = message.replace("#<I>", "").strip()
-        return message
-    except Exception as e:
-        raise RuntimeError(f"Error generating commit message: {e}")
+    #Provide explicit prompt to guide the model
+    prompt = f"### Commit message for the following code diff:\n{diff}\n### Commit message:"
+
+    inputs = tokenizer(prompt, return_tensors='pt', padding=True, truncation=True, max_length=1024)
+
+    outputs = model.generate(
+        input_ids=inputs['input_ids'],
+        attention_mask=inputs['attention_mask'],
+        max_new_tokens=150,
+        num_beams=4,
+        early_stopping=True,
+        no_repeat_ngram_size=2,
+        length_penalty=2.0,
+        decoder_start_token_id=tokenizer.pad_token_id
+    )
+
+    message = tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
+
+    #Ensure the message ends with a period.
+    if not message.endswith("."):
+        message += "."
+
+    return message
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print("No diff file provided.")
+        print("No diff file provided.", file=sys.stderr)
         sys.exit(1)
 
     temp_file_path = sys.argv[1]
 
-    #Read diff from file
     try:
         with open(temp_file_path, 'r', encoding='utf-8') as f:
             diff = f.read().strip()

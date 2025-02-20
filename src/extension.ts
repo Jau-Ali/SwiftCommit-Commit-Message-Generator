@@ -63,15 +63,15 @@ export function activate(context: vscode.ExtensionContext) {
             if (diff.trim()) {
                 messageProvider.setMessage("Generating...");
 
-                // ✅ Write diff to a temp file with UTF-8 encoding
+                //Write diff to a temp file with UTF-8 encoding
                 const tempFilePath = path.join(workspaceFolder.uri.fsPath, "temp_diff.txt");
                 fs.writeFileSync(tempFilePath, diff, "utf-8");
 
-                // ✅ Run Python script with the temp file
+                //Run Python script with the temp file
                 const scriptPath = path.join(__dirname, "../generate_commit_message.py");
                 const { stdout: generatedMsg, stderr: scriptError } = await execPromise(`python "${scriptPath}" "${tempFilePath}"`);
 
-                // ✅ Remove the temp file after use
+                //Remove the temp file after use
                 fs.unlinkSync(tempFilePath);
 
                 if (scriptError) {

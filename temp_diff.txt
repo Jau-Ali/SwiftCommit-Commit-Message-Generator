@@ -1,0 +1,81 @@
+diff --git a/generate_commit_message.py b/generate_commit_message.py
+index d53acc3..511243f 100644
+--- a/generate_commit_message.py
++++ b/generate_commit_message.py
+@@ -12,29 +12,58 @@ def generate_commit_message(diff):
+     tokenizer = RobertaTokenizer.from_pretrained(tokenizer_path)
+     model = T5ForConditionalGeneration.from_pretrained(model_path)
+ 
+-    #Provide explicit prompt to guide the model
+-    prompt = f"### Commit message for the following code diff:\n{diff}\n### Commit message:"
++    # Extract file-specific changes
++    file_diffs = {}
++    current_file = None
+ 
+-    inputs = tokenizer(prompt, return_tensors='pt', padding=True, truncation=True, max_length=1024)
++    for line in diff.splitlines():
++        if line.startswith("diff --git"):
++            parts = line.split(" ")
++            if len(parts) > 2:
++                current_file = parts[-1].strip()
++                file_diffs[current_file] = []
++        elif line.startswith("-") or line.startswith("+"):
++            if current_file:
++                file_diffs[current_file].append(line.strip())
+ 
+-    outputs = model.generate(
+-        input_ids=inputs['input_ids'],
+-        attention_mask=inputs['attention_mask'],
+-        max_new_tokens=150,
+-        num_beams=4,
+-        early_stopping=True,
+-        no_repeat_ngram_size=2,
+-        length_penalty=2.0,
+-        decoder_start_token_id=tokenizer.pad_token_id
+-    )
++    if not file_diffs:
++        return "No significant changes detected."
+ 
+-    message = tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
++    commit_messages = []
+ 
+-    #Ensure the message ends with a period.
+-    if not message.endswith("."):
+-        message += "."
++    for file, changes in file_diffs.items():
++        file_name = os.path.basename(file)
+ 
+-    return message
++        # Generate commit message for each file separately
++        prompt = f"### Code changes for {file_name}:\n" + "\n".join(changes) + "\n\n### Commit message:"
++        inputs = tokenizer(prompt, return_tensors='pt', padding=True, truncation=True, max_length=1024)
++
++        outputs = model.generate(
++            input_ids=inputs['input_ids'],
++            attention_mask=inputs['attention_mask'],
++            max_new_tokens=100,
++            num_beams=4,
++            early_stopping=True,
++            no_repeat_ngram_size=2,
++            length_penalty=1.0,
++            decoder_start_token_id=tokenizer.pad_token_id
++        )
++
++        message = tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
++
++        # ✅ Fix capitalization issues
++        if message and message[0].islower():
++            message = message[0].upper() + message[1:]
++
++        commit_messages.append(message)
++
++    # ✅ Combine messages with "and" instead of separate lines
++    if len(commit_messages) > 1:
++        final_message = " and ".join(commit_messages) + "."
++    else:
++        final_message = commit_messages[0] + "."
++
++    return final_message
+ 
+ if __name__ == '__main__':
+     if len(sys.argv) < 2:

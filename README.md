@@ -5,9 +5,9 @@
 </div>
 
 <div style="text-align: center; padding-bottom:10px">
+<img src="images/my-icon.png" alt="SwiftCommit Screenshot" width="200" style="border-radius: 50%;">
 
 ### A VS Code extension that automatically generates commit messages using NLP.
-
 </div>
 
 ## Key features include:
@@ -23,11 +23,11 @@
 
 ## Known Issues
 
-- **Initial Release**: As this is an initial release, some features might be under development.
+- **Commit Message Quality**: The NLP model generates commit messages based on code changes; however, some messages may require minor refinement based on user preferences for clarity and accuracy.
 
-- **Commit Message Input**: The functionality to automatically populate the commit message field in the VS Code Source Control is not yet implemented.
+- **Performance Considerations**: While the model processes most code diffs efficiently, larger diffs may result in slightly increased processing times.
 
-- **Commit Message Quality**: The quality of generated commit messages may still require improvement and refinement.
+- **Handling Complex or Minimal Changes**: The model is designed to handle a wide range of code modifications; however, it may not always fully capture highly complex, ambiguous, or very minor code changes.
 
 <div style="padding-bottom:30px">
 
@@ -35,7 +35,10 @@
 
 ### 0.3.0
 
-- **Not Yet**:
+
+- **Trained NLP Model Integrated**: The extension now uses a fully trained NLP model.
+- **Commit Message Auto-Population**:  Automatically inserts generated commit messages into the VS Code Source Control commit input field.
+
 
 ### 0.2.0
 

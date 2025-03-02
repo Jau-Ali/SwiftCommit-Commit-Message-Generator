@@ -5,7 +5,6 @@
 </div>
 
 <div style="text-align: center; padding-bottom:10px">
-<img src="images/my-icon.png" alt="SwiftCommit Screenshot" width="200" style="border-radius: 50%;">
 
 ### A VS Code extension that automatically generates commit messages using NLP.
 </div>

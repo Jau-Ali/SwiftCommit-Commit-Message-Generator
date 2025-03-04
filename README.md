@@ -1,4 +1,4 @@
-# SwiftCommit
+# SwiftCommit⚡
 > A VS Code extension that automatically generates commit messages using NLP.
 
 <div align="center">
@@ -15,7 +15,7 @@
 </div>
 
 
-## Preview
+## 🔍Preview
 
 SwiftCommit analyzes staged changes in your Git repository and generates a concise, context-aware commit message within the VS Code source control pane.
 
@@ -28,7 +28,7 @@ SwiftCommit analyzes staged changes in your Git repository and generates a conci
 <!-- TODO: Add GIF here -->
 
 
-## Getting started
+## 🚀Getting started
 
 How to install and run the extension in VS Code.
 Installation
@@ -44,51 +44,64 @@ Installation
 ### 5. Restart VS Code if necessary.
 
 
-## Features
+## ✨Features
 
 <ul>
-    <li><strong>Automated Commit Messages:</strong> Generates meaningful commit messages based on code changes.</li>
-    <li><strong>Supports Multiple File Types:</strong> Recognizes various programming languages and file extensions.</li>
-    <li><strong>Conventional Commits:</strong> Applies prefixes like <code>feat</code>, <code>fix</code>, <code>chore</code>, <code>docs</code>, and more.</li>
-    <li><strong>One-Click Generation:</strong> Just press a button—no manual input required.</li>
-    <li><strong>Optimized NLP Model:</strong> Uses a fine-tuned <code>CodeT5</code> model for accurate commit summaries.</li>
-    <li><strong>Fast & Efficient:</strong> Works seamlessly within your Git workflow.</li>
+    <li>🤖 <strong>Automated Commit Messages:</strong> Generates meaningful commit messages based on code changes<li>
+    <li>📂 <strong>Supports Multiple File Types:</strong> Recognizes various programming languages and file extensions.</li>
+    <li>📌 <strong>Conventional Commits:</strong> Applies prefixes like <code>feat</code>, <code>fix</code>, <code>chore</code>, <code>docs</code>, and more.</li>
+    <li>⚡ <strong>One-Click Generation:</strong> Just press a button—no manual input required.</li>
+    <li>🧠 <strong>Optimized NLP Model:</strong> Uses a fine-tuned <code>CodeT5</code> model for accurate commit summaries.</li>
+    <li>🚀 <strong>Fast & Efficient:</strong> Works seamlessly within your Git workflow.</li>
 </ul>
 
 
 
-## Comparison with other extensions
+## ⚖️Comparison with other extensions
 
-### Unlike traditional commit message generators, SwiftCommit requires zero manual input. Other extensions often demand selecting a commit type, writing a summary, or filling in form fields—SwiftCommit does it all with one click.
+### 🔄 Unlike Traditional Extensions
 
-## Powered by AI
+<ul>
+    <li> Other extensions often require an <strong>API key</strong> because they use:</li>
+    <ul>
+        <li>🤖 OpenAI's GPT (which requires a paid API key)</li>
+        <li>☁️ Hugging Face’s hosted models (which may need a free/paid key)</li>
+        <li>🖥️ Custom server-based AI models</li>
+    </ul>
+</ul>
+
+<ul>
+    <li> <strong>SwiftCommit is different</strong> because:</li>
+    <ul>
+        <li>💻 <strong>Runs locally after setup</strong> Internet is needed only for the initial download.</li>
+        <li>🔐 <strong>No API keys or account setup</strong> needed.</li>
+        <li>⚡ <strong>Faster processing</strong> since everything happens on the user’s machine.</li>
+    </ul>
+</ul>
+
+## This makes SwiftCommit faster, more private, and easier to use. 🚀
+
+
+
+
+
+## 🤖Powered by AI
 
 ### SwiftCommit leverages CodeT5, a transformer-based NLP model trained specifically for code-related tasks. It analyzes diffs and generates commit messages that align with best practices and human-written summaries.
 
-
-## Contributing
-
-### <p>We welcome contributions from the community! See the <a href="/CONTRIBUTING.md"><strong>Contributing Guide</strong></a> for details on how to help improve SwiftCommit.</p>
-
-
-
-## License
+## 📜License
 
 ### SwiftCommit is released under the MIT License by the SwiftCommit Team at Western Mindanao State University.
 
 ## Credits
 
-### Developed by:
+### 👨‍💻Developed by:
 <ul>
-    <li><strong>Gene Alprince M. Braga</strong></li>
-    <li><strong>Antonette S. Manolis</strong></li>
-    <li><strong>Mohammad Sali S. Jauhari</strong></li>
+<ul> <li>🧑‍💻 <strong>Gene Alprince M. Braga</strong></li> <li>👩‍💻 <strong>Antonette S. Manolis</strong></li> <li>👨‍💻 <strong>Mohammad Sali S. Jauhari</strong></li> </ul>
 </ul>
 
 ### Adviser:
-<li><strong>Mr. Jaydee C. Ballaho, MIT</strong></li>
+<li><strong>📘Mr. Jaydee C. Ballaho, MIT</strong></li>
 
 
-<div style="text-align: center; font-size: 1.2em; font-style: italic; font-weight: bold;">  
-    Special thanks to the Western Mindanao State University College of Computing Studies for supporting this research project.  
-</div>
+<div style="text-align: center; font-size: 1.2em; font-style: italic; font-weight: bold;"> 🎓 Special thanks to the <strong>Western Mindanao State University College of Computing Studies</strong> for supporting this research project. </div>

@@ -86,7 +86,7 @@ Installation
 
 ## Credits
 
-### 👨‍💻Developed by:
+### Developed by:
 
 <ul>
     <li>🧑‍💻 <strong>Gene Alprince M. Braga</strong></li> 
@@ -99,4 +99,4 @@ Installation
 <li><strong>📘Mr. Jaydee C. Ballaho, MIT</strong></li>
 
 
-<div style="text-align: center; font-size: 1.2em; font-style: italic; font-weight: bold;"> 🎓 Special thanks to the <strong>Western Mindanao State University College of Computing Studies</strong> for supporting this research project. </div>
+## <div style="text-align: center; font-size: 0.8em; font-style: italic; font-weight: bold;"> 🎓 Special thanks to the <strong>Western Mindanao State University College of Computing Studies</strong> for supporting this research project. </div>

@@ -79,11 +79,7 @@ Installation
     </ul>
 </ul>
 
-## This makes SwiftCommit faster, more private, and easier to use. 🚀
-
-
-
-
+### This makes SwiftCommit faster, more private, and easier to use. 🚀
 
 ## 🤖Powered by AI
 
@@ -96,9 +92,13 @@ Installation
 ## Credits
 
 ### 👨‍💻Developed by:
-<ul>
-<ul> <li>🧑‍💻 <strong>Gene Alprince M. Braga</strong></li> <li>👩‍💻 <strong>Antonette S. Manolis</strong></li> <li>👨‍💻 <strong>Mohammad Sali S. Jauhari</strong></li> </ul>
+
+<ul> 
+    <li>🧑‍💻 <strong>Gene Alprince M. Braga</strong></li> 
+    <li>👩‍💻 <strong>Antonette S. Manolis</strong></li> 
+    <li>👨‍💻 <strong>Mohammad Sali S. Jauhari</strong></li> 
 </ul>
+
 
 ### Adviser:
 <li><strong>📘Mr. Jaydee C. Ballaho, MIT</strong></li>

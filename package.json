@@ -64,7 +64,7 @@
     }
   },
   "icon": "images/my-icon.png",
-  "scripts": {
+"scripts": {
     "vscode:prepublish": "yarn run package",
     "compile": "yarn run check-types && yarn run lint && node esbuild.js",
     "watch": "npm-run-all -p watch:*",
@@ -76,8 +76,9 @@
     "pretest": "yarn run compile-tests && yarn run compile && yarn run lint",
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
-    "test": "vscode-test"
-  },
+    "test": "vscode-test",
+    "postinstall": "python -m pip install --upgrade pip && python -m pip install -r requirements.txt"
+},
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/mocha": "^10.0.7",

@@ -25,8 +25,6 @@ SwiftCommit analyzes staged changes in your Git repository and generates a conci
         width="1000" />
 </div>
 
-<!-- TODO: Add GIF here -->
-
 
 ## 🚀Getting started
 
@@ -45,17 +43,14 @@ Installation
 
 
 ## ✨Features
-
 <ul>
-    <li>🤖 <strong>Automated Commit Messages:</strong> Generates meaningful commit messages based on code changes<li>
+    <li>🤖 <strong>Automated Commit Messages:</strong> Generates meaningful commit messages based on code changes.</li>
     <li>📂 <strong>Supports Multiple File Types:</strong> Recognizes various programming languages and file extensions.</li>
     <li>📌 <strong>Conventional Commits:</strong> Applies prefixes like <code>feat</code>, <code>fix</code>, <code>chore</code>, <code>docs</code>, and more.</li>
     <li>⚡ <strong>One-Click Generation:</strong> Just press a button—no manual input required.</li>
     <li>🧠 <strong>Optimized NLP Model:</strong> Uses a fine-tuned <code>CodeT5</code> model for accurate commit summaries.</li>
     <li>🚀 <strong>Fast & Efficient:</strong> Works seamlessly within your Git workflow.</li>
 </ul>
-
-
 
 ## ⚖️Comparison with other extensions
 
@@ -93,7 +88,7 @@ Installation
 
 ### 👨‍💻Developed by:
 
-<ul> 
+<ul>
     <li>🧑‍💻 <strong>Gene Alprince M. Braga</strong></li> 
     <li>👩‍💻 <strong>Antonette S. Manolis</strong></li> 
     <li>👨‍💻 <strong>Mohammad Sali S. Jauhari</strong></li> 

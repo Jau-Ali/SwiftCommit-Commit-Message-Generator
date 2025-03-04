@@ -1,59 +1,94 @@
-<div style="text-align: center;">
-
 # SwiftCommit
+> A VS Code extension that automatically generates commit messages using NLP.
+
+<div align="center">
+
+<!-- Must not be SVG. Also all image URLs must be full HTTPS URLs - absolute paths. -->
+<div href="https://marketplace.visualstudio.com/items?itemName=SaliJau28.swiftcommit"
+    title="Go to Marketplace extension page">
+
+<img src="https://raw.githubusercontent.com/Jau-Ali/SwiftCommit-Commit-Message-Generator/refs/heads/master/images/transparent-logo.png"
+    alt="Logo"
+    width="500" />
+</div>
 
 </div>
 
-<div style="text-align: center; padding-bottom:10px">
 
-### A VS Code extension that automatically generates commit messages using NLP.
+## Preview
+
+SwiftCommit analyzes staged changes in your Git repository and generates a concise, context-aware commit message within the VS Code source control pane.
+
+<div align="center">
+    <img src="https://raw.githubusercontent.com/Jau-Ali/SwiftCommit-Commit-Message-Generator/refs/heads/master/images/demo.gif"
+        alt="sample screenshot of chore"
+        width="1000" />
 </div>
 
-## Key features include:
-
-- **Automatic Commit Messages**: Generate meaningful commit messages based on code diffs.
-- **Real-time Integration**: Seamlessly integrates with VS Code’s version control system.
-
-## Requirements
-
-- **Git**: Ensure you have Git installed. [Download Git](https://git-scm.com/downloads/)
-- **GitHub Desktop**: Install GitHub Desktop. [Download GitHub Desktop](https://desktop.github.com/)
+<!-- TODO: Add GIF here -->
 
 
-## Known Issues
+## Getting started
 
-- **Commit Message Quality**: The NLP model generates commit messages based on code changes; however, some messages may require minor refinement based on user preferences for clarity and accuracy.
+How to install and run the extension in VS Code.
+Installation
 
-- **Performance Considerations**: While the model processes most code diffs efficiently, larger diffs may result in slightly increased processing times.
+### 1. Open Visual Studio Code.
 
-- **Handling Complex or Minimal Changes**: The model is designed to handle a wide range of code modifications; however, it may not always fully capture highly complex, ambiguous, or very minor code changes.
+### 2. Go to Extensions (Ctrl+Shift+X).
 
-<div style="padding-bottom:30px">
+### 3. Search for SwiftCommit.
 
-## Release Notes
+### 4. Click Install.
 
-### 0.3.0
-
-
-- **Trained NLP Model Integrated**: The extension now uses a fully trained NLP model.
-- **Commit Message Auto-Population**:  Automatically inserts generated commit messages into the VS Code Source Control commit input field.
+### 5. Restart VS Code if necessary.
 
 
-### 0.2.0
+## Features
 
-- **Commit Message Generation**: Added functionality for generating commit messages based on code diffs using an NLP model.
+<ul>
+    <li><strong>Automated Commit Messages:</strong> Generates meaningful commit messages based on code changes.</li>
+    <li><strong>Supports Multiple File Types:</strong> Recognizes various programming languages and file extensions.</li>
+    <li><strong>Conventional Commits:</strong> Applies prefixes like <code>feat</code>, <code>fix</code>, <code>chore</code>, <code>docs</code>, and more.</li>
+    <li><strong>One-Click Generation:</strong> Just press a button—no manual input required.</li>
+    <li><strong>Optimized NLP Model:</strong> Uses a fine-tuned <code>CodeT5</code> model for accurate commit summaries.</li>
+    <li><strong>Fast & Efficient:</strong> Works seamlessly within your Git workflow.</li>
+</ul>
 
-### 0.1.0
 
-- **Initial Setup**: The functionality for generating commit messages based on code diffs has not yet been implemented. The NLP model used for generating commit messages is still under training and has not yet been integrated.
 
-- **Development Preview**: The extension is in a development preview phase; further testing, model integration, and enhancements are ongoing.
+## Comparison with other extensions
 
-</div>
+### Unlike traditional commit message generators, SwiftCommit requires zero manual input. Other extensions often demand selecting a commit type, writing a summary, or filling in form fields—SwiftCommit does it all with one click.
 
----
-<div style="margin-top: 30px; text-align: center;">
+## Powered by AI
 
-### *Enjoy using SwiftCommit!*
+### SwiftCommit leverages CodeT5, a transformer-based NLP model trained specifically for code-related tasks. It analyzes diffs and generates commit messages that align with best practices and human-written summaries.
 
+
+## Contributing
+
+### <p>We welcome contributions from the community! See the <a href="/CONTRIBUTING.md"><strong>Contributing Guide</strong></a> for details on how to help improve SwiftCommit.</p>
+
+
+
+## License
+
+### SwiftCommit is released under the MIT License by the SwiftCommit Team at Western Mindanao State University.
+
+## Credits
+
+### Developed by:
+<ul>
+    <li><strong>Gene Alprince M. Braga</strong></li>
+    <li><strong>Antonette S. Manolis</strong></li>
+    <li><strong>Mohammad Sali S. Jauhari</strong></li>
+</ul>
+
+### Adviser:
+<li><strong>Mr. Jaydee C. Ballaho, MIT</strong></li>
+
+
+<div style="text-align: center; font-size: 1.2em; font-style: italic; font-weight: bold;">  
+    Special thanks to the Western Mindanao State University College of Computing Studies for supporting this research project.  
 </div>

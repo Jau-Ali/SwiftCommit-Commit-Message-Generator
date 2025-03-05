@@ -1,21 +1,5 @@
 import sys
 import os
-import subprocess
-
-# Ensure required dependencies are installed
-def install_missing_dependencies():
-    required_packages = ["transformers", "torch"]
-    for package in required_packages:
-        try:
-            __import__(package)
-        except ImportError:
-            print(f"Installing missing dependency: {package}...", file=sys.stderr)
-            subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-
-# Install dependencies if missing
-install_missing_dependencies()
-
-# Now import dependencies
 from transformers import RobertaTokenizer, T5ForConditionalGeneration
 
 # Set paths dynamically based on the script's location
@@ -24,12 +8,8 @@ model_path = os.path.join(current_script_path, "codeT5-model")
 tokenizer_path = os.path.join(current_script_path, "codeT5-tokenizer")
 
 def generate_commit_message(diff):
-    """Generates a commit message based on the provided diff."""
-    
-    if not os.path.exists(model_path):
-        raise FileNotFoundError(f"Model path does not exist: {model_path}")
-    if not os.path.exists(tokenizer_path):
-        raise FileNotFoundError(f"Tokenizer path does not exist: {tokenizer_path}")
+    if not (os.path.exists(model_path) and os.path.exists(tokenizer_path)):
+        raise FileNotFoundError("Model or tokenizer path does not exist.")
 
     tokenizer = RobertaTokenizer.from_pretrained(tokenizer_path)
     model = T5ForConditionalGeneration.from_pretrained(model_path)
@@ -73,13 +53,13 @@ def generate_commit_message(diff):
 
         message = tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
 
-        # Fix capitalization issues
+        #  Fix capitalization issues
         if message and message[0].islower():
             message = message[0].upper() + message[1:]
 
         commit_messages.append(message)
 
-    # Combine messages with "and" instead of separate lines
+    #  Combine messages with "and" instead of separate lines
     if len(commit_messages) > 1:
         final_message = " and ".join(commit_messages) + "."
     else:

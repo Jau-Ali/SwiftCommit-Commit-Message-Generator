@@ -7,10 +7,13 @@ import { MessageProvider } from "./messageProvider";
 
 const execPromise = promisify(exec);
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
     let commitMessage: string = "";
     const messageProvider = new MessageProvider();
     vscode.window.registerTreeDataProvider("swiftcommitView", messageProvider);
+
+    // Ensure dependencies are installed before use
+    await ensureDependencies();
 
     let disposableGenerate = vscode.commands.registerCommand("swiftcommit.generateMessage", async () => {
         commitMessage = "";
@@ -22,7 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
 
         try {
-            // Get all staged diffs instead of just the active file
+            // Get all staged diffs
             const { stdout: diff, stderr: diffError } = await execPromise(`git diff --cached`, {
                 cwd: workspaceFolder.uri.fsPath,
             });
@@ -40,15 +43,16 @@ export function activate(context: vscode.ExtensionContext) {
 
             messageProvider.setMessage("Generating...");
 
-            // Write diff to a temp file with UTF-8 encoding
+            // Write diff to a temp file
             const tempFilePath = path.join(workspaceFolder.uri.fsPath, "temp_diff.txt");
             fs.writeFileSync(tempFilePath, diff, "utf-8");
 
             // Run Python script with the temp file
             const scriptPath = path.join(__dirname, "../generate_commit_message.py");
-            const { stdout: generatedMsg, stderr: scriptError } = await execPromise(`python "${scriptPath}" "${tempFilePath}"`);
+            const pythonCmd = await getPythonCommand();
+            const { stdout: generatedMsg, stderr: scriptError } = await execPromise(`${pythonCmd} "${scriptPath}" "${tempFilePath}"`);
 
-            // Remove the temp file after use
+            // Remove the temp file
             fs.unlinkSync(tempFilePath);
 
             if (scriptError) {
@@ -90,5 +94,37 @@ function setSCMInputBox(message: string) {
         git.repositories[0].inputBox.value = message;
     } else {
         vscode.window.showErrorMessage("Git extension is not available or no repository found.");
+    }
+}
+
+/**
+ * Ensures that required Python dependencies are installed.
+ */
+async function ensureDependencies() {
+    try {
+        const pythonCmd = await getPythonCommand();
+        const { stdout } = await execPromise(`${pythonCmd} -m pip install transformers torch`);
+        console.log(stdout);
+        vscode.window.showInformationMessage("SwiftCommit: Dependencies installed successfully.");
+    } catch (error) {
+        console.error("Dependency Installation Error:", error);
+        vscode.window.showErrorMessage("SwiftCommit: Failed to install dependencies. Check the console for details.");
+    }
+}
+
+/**
+ * Detects whether to use `python` or `python3` based on the system.
+ */
+async function getPythonCommand(): Promise<string> {
+    try {
+        await execPromise("python --version");
+        return "python";
+    } catch {
+        try {
+            await execPromise("python3 --version");
+            return "python3";
+        } catch {
+            throw new Error("Python is not installed or not in PATH.");
+        }
     }
 }

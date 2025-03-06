@@ -13,9 +13,3 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 **/.vscode-test.*
-
-# Explicitly include the model and tokenizer files
-!swiftcommit_model/
-!swiftcommit_model/**
-!swiftcommit_tokenizer/
-!swiftcommit_tokenizer/**

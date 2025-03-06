@@ -12,8 +12,21 @@ export async function activate(context: vscode.ExtensionContext) {
     const messageProvider = new MessageProvider();
     vscode.window.registerTreeDataProvider("swiftcommitView", messageProvider);
 
-    // Ensure dependencies are installed before use
-    await ensureDependencies();
+    // Ensure dependencies are installed with a progress bar
+    await vscode.window.withProgress(
+        {
+            location: vscode.ProgressLocation.Notification,
+            title: "SwiftCommit: Installing dependencies...",
+            cancellable: false,
+        },
+        async (progress) => {
+            try {
+                await ensureDependencies(progress);
+            } catch (error) {
+                vscode.window.showErrorMessage("SwiftCommit: Failed to install dependencies.");
+            }
+        }
+    );
 
     let disposableGenerate = vscode.commands.registerCommand("swiftcommit.generateMessage", async () => {
         commitMessage = "";
@@ -98,13 +111,16 @@ function setSCMInputBox(message: string) {
 }
 
 /**
- * Ensures that required Python dependencies are installed.
+ * Ensures that required Python dependencies are installed with a progress bar.
  */
-async function ensureDependencies() {
+async function ensureDependencies(progress: vscode.Progress<{ message?: string }>) {
     try {
         const pythonCmd = await getPythonCommand();
-        const { stdout } = await execPromise(`${pythonCmd} -m pip install transformers torch`);
-        console.log(stdout);
+
+        progress.report({ message: "Checking Python dependencies..." });
+        await execPromise(`${pythonCmd} -m pip install --quiet transformers torch`);
+
+        progress.report({ message: "Dependencies installed successfully." });
         vscode.window.showInformationMessage("SwiftCommit: Dependencies installed successfully.");
     } catch (error) {
         console.error("Dependency Installation Error:", error);

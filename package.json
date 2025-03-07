@@ -2,7 +2,8 @@
   "name": "swiftcommit",
   "displayName": "SwiftCommit",
   "description": "Automatically generates commit messages using NLP.",
-  "version": "1.0.2",
+  "version": "1.0.0",
+  "license": "GPL-3.0",
   "engines": {
     "vscode": "^1.93.0"
   },
@@ -29,17 +30,10 @@
           "title": "Copy to Clipboard"
         }
     ],
-    "viewsContainers": {
-        "scm": [
-            {
-                "id": "swiftcommitViewContainer",
-                "title": "SwiftCommit"
-            }
-        ]
-    },
     "views": {
         "scm": [
             {
+                "icon": "images/my-icon.png",
                 "id": "swiftcommitView",
                 "name": "Generated Commit Message"
             }
@@ -53,13 +47,6 @@
                 "when": "scmProvider == git",
                 "title": "Generate Commit Message"
             }
-        ],
-        "view/title": [
-          {
-            "command": "swiftcommitView.copyMessageButton",
-            "when": "scmProvider == git",
-            "group": "navigation"
-          }
         ]
     }
   },
@@ -97,11 +84,5 @@
     "type": "git",
     "url": "https://github.com/Jau-Ali/SwiftCommit-Commit-Message-Generator"
   },
-  "publisher": "SaliJau28",
-  "files": [
-    "dist",
-    "images",
-    "swiftcommit_model",
-    "swiftcommit_tokenizer"
-  ]
+  "publisher": "SaliJau28"
 }

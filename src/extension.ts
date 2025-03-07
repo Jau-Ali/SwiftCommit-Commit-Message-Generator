@@ -1,3 +1,20 @@
+/*
+ * This file is part of SwiftCommit.
+ *
+ * SwiftCommit is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * SwiftCommit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with SwiftCommit. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import * as vscode from "vscode";
 import { exec } from "child_process";
 import { promisify } from "util";
@@ -16,14 +33,17 @@ export async function activate(context: vscode.ExtensionContext) {
     await vscode.window.withProgress(
         {
             location: vscode.ProgressLocation.Notification,
-            title: "SwiftCommit: Installing dependencies...",
             cancellable: false,
         },
         async (progress) => {
             try {
-                await ensureDependencies(progress);
+                const dependenciesInstalled = await ensureDependencies(progress);
+                vscode.window.showInformationMessage(
+                    `SwiftCommit: ${dependenciesInstalled ? "All dependencies are already installed." : "Dependencies installed successfully."}`
+                );
             } catch (error) {
-                vscode.window.showErrorMessage("SwiftCommit: Failed to install dependencies.");
+                vscode.window.showErrorMessage("SwiftCommit: Failed to install dependencies. Check console for details.");
+                console.error("Dependency Installation Error:", error);
             }
         }
     );
@@ -33,55 +53,49 @@ export async function activate(context: vscode.ExtensionContext) {
         const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
 
         if (!workspaceFolder) {
-            vscode.window.showErrorMessage("No workspace folder found.");
+            vscode.window.showErrorMessage("SwiftCommit: No workspace folder found.");
             return;
         }
 
         try {
             // Get all staged diffs
-            const { stdout: diff, stderr: diffError } = await execPromise(`git diff --cached`, {
+            const { stdout: diff } = await execPromise(`git diff --cached`, {
                 cwd: workspaceFolder.uri.fsPath,
             });
 
-            if (diffError) {
-                console.error("Error:", diffError);
-                vscode.window.showErrorMessage(`Error fetching diff: ${diffError}`);
-                return;
-            }
-
             if (!diff.trim()) {
-                vscode.window.showInformationMessage("No staged changes detected.");
+                vscode.window.showInformationMessage("SwiftCommit: No staged changes detected.");
                 return;
             }
 
-            messageProvider.setMessage("Generating...");
+            messageProvider.setMessage("Generating commit message.");
 
             // Write diff to a temp file
             const tempFilePath = path.join(workspaceFolder.uri.fsPath, "temp_diff.txt");
-            fs.writeFileSync(tempFilePath, diff, "utf-8");
+            await fs.promises.writeFile(tempFilePath, diff, "utf-8");
 
             // Run Python script with the temp file
             const scriptPath = path.join(__dirname, "../generate_commit_message.py");
-            const pythonCmd = await getPythonCommand();
-            const { stdout: generatedMsg, stderr: scriptError } = await execPromise(`${pythonCmd} "${scriptPath}" "${tempFilePath}"`);
 
-            // Remove the temp file
-            fs.unlinkSync(tempFilePath);
-
-            if (scriptError) {
-                console.error("Script Error:", scriptError);
-                vscode.window.showErrorMessage(`Error generating commit message: ${scriptError}`);
+            if (!fs.existsSync(scriptPath)) {
+                vscode.window.showErrorMessage("SwiftCommit: Python script not found.");
                 return;
             }
+
+            const pythonCmd = await getPythonCommand();
+            const { stdout: generatedMsg } = await execPromise(`${pythonCmd} "${scriptPath}" "${tempFilePath}"`);
+
+            // Remove the temp file
+            await fs.promises.unlink(tempFilePath);
 
             commitMessage = generatedMsg.replace(/\s+/g, " ").trim();
             messageProvider.setMessage(commitMessage);
             setSCMInputBox(commitMessage);
 
-            vscode.window.showInformationMessage("Commit message generated!");
+            vscode.window.showInformationMessage("SwiftCommit: Commit message generated successfully!");
         } catch (error) {
-            console.error("Error fetching diff:", error);
-            vscode.window.showErrorMessage(`Error fetching diff: ${error}`);
+            console.error("Commit Message Generation Error:", error);
+            vscode.window.showErrorMessage("SwiftCommit: Failed to generate commit message. See console for details.");
         }
     });
 
@@ -89,9 +103,9 @@ export async function activate(context: vscode.ExtensionContext) {
         if (commitMessage) {
             try {
                 await vscode.env.clipboard.writeText(commitMessage);
-                vscode.window.showInformationMessage("Message copied to clipboard.");
+                vscode.window.showInformationMessage("SwiftCommit: Commit message copied to clipboard.");
             } catch (error) {
-                vscode.window.showErrorMessage("Failed to copy text: " + error);
+                vscode.window.showErrorMessage("SwiftCommit: Failed to copy commit message.");
             }
         }
     });
@@ -106,41 +120,57 @@ function setSCMInputBox(message: string) {
     if (git && git.repositories.length > 0) {
         git.repositories[0].inputBox.value = message;
     } else {
-        vscode.window.showErrorMessage("Git extension is not available or no repository found.");
+        vscode.window.showErrorMessage("SwiftCommit: Git extension not available or no repository found.");
     }
 }
 
 /**
- * Ensures that required Python dependencies are installed with a progress bar.
+ * Ensures that required Python dependencies (`transformers` and `torch`) are installed.
+ * Returns `true` if both are installed, otherwise installs them.
  */
-async function ensureDependencies(progress: vscode.Progress<{ message?: string }>) {
+async function ensureDependencies(progress: vscode.Progress<{ message?: string }>): Promise<boolean> {
     try {
         const pythonCmd = await getPythonCommand();
+        progress.report({ message: "SwiftCommit: Checking dependencies." });
 
-        progress.report({ message: "Checking Python dependencies..." });
-        await execPromise(`${pythonCmd} -m pip install --quiet transformers torch`);
+        // Check if both transformers and torch are installed
+        const installedPackages = await execPromise(`${pythonCmd} -m pip list`);
+        const hasTransformers = installedPackages.stdout.includes("transformers");
+        const hasTorch = installedPackages.stdout.includes("torch");
 
+        if (hasTransformers && hasTorch) {return true;} // Dependencies already installed
+
+        // Install missing dependencies
+        progress.report({ message: "SwiftCommit: Installing dependencies." });
+        const missingPackages = [];
+        if (!hasTransformers) {missingPackages.push("transformers");}
+        if (!hasTorch) {missingPackages.push("torch");}
+
+        await execPromise(`${pythonCmd} -m pip install --quiet ${missingPackages.join(" ")}`);
         progress.report({ message: "Dependencies installed successfully." });
-        vscode.window.showInformationMessage("SwiftCommit: Dependencies installed successfully.");
+
+        return false; // Dependencies were installed
     } catch (error) {
         console.error("Dependency Installation Error:", error);
-        vscode.window.showErrorMessage("SwiftCommit: Failed to install dependencies. Check the console for details.");
+        throw new Error("SwiftCommit: Failed to install dependencies.");
     }
 }
 
 /**
- * Detects whether to use `python` or `python3` based on the system.
+ * Detects the correct Python command (`python`, `python3`, or uses `sys.executable`).
  */
 async function getPythonCommand(): Promise<string> {
     try {
-        await execPromise("python --version");
-        return "python";
+        // Use Python's built-in executable detection to avoid OS-specific issues
+        const { stdout } = await execPromise("python -c \"import sys; print(sys.executable)\"");
+        return stdout.trim();
     } catch {
         try {
-            await execPromise("python3 --version");
-            return "python3";
+            // Try python3 if python isn't available
+            const { stdout } = await execPromise("python3 -c \"import sys; print(sys.executable)\"");
+            return stdout.trim();
         } catch {
-            throw new Error("Python is not installed or not in PATH.");
+            throw new Error("SwiftCommit: Python is not installed or not in PATH.");
         }
     }
 }

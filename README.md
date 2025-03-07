@@ -28,18 +28,48 @@ SwiftCommit analyzes staged changes in your Git repository and generates a conci
 
 ## 🚀Getting started
 
-How to install and run the extension in VS Code.
-Installation
+## 🔧 Prerequisites
+<p>Before using <strong>SwiftCommit</strong>, ensure you have the following installed on your system:</p>
 
-### 1. Open Visual Studio Code.
+<ul>
+    <li>🐍 <strong><a href="https://www.python.org/downloads/">Python 3.8+</a></strong> – Required for running the commit message generation model</li>
+    <li>🌱 <strong><a href="https://git-scm.com/downloads">Git</a></strong> – For version control and diff extraction</li>
+    <li>🖥️ <strong><a href="https://code.visualstudio.com/">Visual Studio Code</a></strong> – With the SwiftCommit extension installed</li>
+</ul>
 
-### 2. Go to Extensions (Ctrl+Shift+X).
+<p><strong>🛠 To check if Python is installed, run the following command in your terminal or command prompt:</strong></p>
 
-### 3. Search for SwiftCommit.
+<pre><code>python --version</code></pre>
 
-### 4. Click Install.
+<p>If you see an error or an older version, download and install Python from <a href="https://www.python.org/downloads/">python.org</a>.</p>
 
-### 5. Restart VS Code if necessary.
+## How to install and run the extension in VS Code.
+
+### 1️⃣ Open Visual Studio Code.
+
+### 2️⃣ Go to Extensions (Ctrl+Shift+X).
+
+### 3️⃣ Search for SwiftCommit.
+
+### 4️⃣ Click Install.
+
+### 5️⃣ Restart VS Code if necessary.
+
+## ⚠️ Important: Wait for Dependencies to Install!
+<p>After installing SwiftCommit, <strong>please wait for the Python dependencies to install completely</strong> before using the extension.</p>
+
+<p>📌 SwiftCommit automatically installs <code>transformers</code> and <code>torch</code> when activated for the first time.</p>
+
+<ul>
+    <li>⏳ This process may take a few minutes, depending on your internet speed.</li>
+    <li>🔍 If you experience issues, check the <strong>VS Code output console</strong> for installation logs.</li>
+    <li>🛠️ You can also manually install dependencies by running:</li>
+</ul>
+
+<pre><code>python -m pip install transformers torch</code></pre>
+
+<p>✅ Once the installation is complete, you can start generating commit messages! 🚀</p>
+
 
 
 ## ✨Features
@@ -78,20 +108,36 @@ Installation
 
 ## 🤖Powered by AI
 
-### SwiftCommit leverages CodeT5, a transformer-based NLP model trained specifically for code-related tasks. It analyzes diffs and generates commit messages that align with best practices and human-written summaries.
+#### SwiftCommit leverages CodeT5, a transformer-based NLP model trained specifically for code-related tasks. It analyzes diffs and generates commit messages that align with best practices and human-written summaries.
 
-## 📜License
+## 📜 License
 
-### SwiftCommit is released under the MIT License by the SwiftCommit Team at Western Mindanao State University.
+<p>
+    <strong>SwiftCommit</strong> is free software: you can redistribute it and/or modify  
+    it under the terms of the <a href="https://www.gnu.org/licenses/" target="_blank">GNU General Public License</a> 
+    as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+</p>
+
+<p>
+    SwiftCommit is distributed in the hope that it will be useful,  
+    but <strong>WITHOUT ANY WARRANTY</strong>; without even the implied warranty of  
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the  
+    <a href="https://www.gnu.org/licenses/" target="_blank">GNU General Public License</a> for more details.
+</p>
+
+<p>
+    You should have received a copy of the GNU General Public License  
+    along with SwiftCommit. If not, see <a href="https://www.gnu.org/licenses/" target="_blank">https://www.gnu.org/licenses/</a>.
+</p>
 
 ## Credits
 
 ### Developed by:
 
 <ul>
-    <li>🧑‍💻 <strong>Gene Alprince M. Braga</strong></li> 
-    <li>👩‍💻 <strong>Antonette S. Manolis</strong></li> 
-    <li>👨‍💻 <strong>Mohammad Sali S. Jauhari</strong></li> 
+    <li>🧑‍💻 <strong>Gene Alprince M. Braga</strong></li>
+    <li>👩‍💻 <strong>Antonette S. Manolis</strong></li>
+    <li>👨‍💻 <strong>Mohammad Sali S. Jauhari</strong></li>
 </ul>
 
 
@@ -99,4 +145,4 @@ Installation
 <li><strong>📘Mr. Jaydee C. Ballaho, MIT</strong></li>
 
 
-## <div style="text-align: center; font-size: 0.8em; font-style: italic; font-weight: bold;"> 🎓 Special thanks to the <strong>Western Mindanao State University College of Computing Studies</strong> for supporting this research project. </div>
+### <div style="text-align: center; font-size: 0.8em; font-style: italic; font-weight: bold;"> 🎓 Special thanks to the <strong>Western Mindanao State University College of Computing Studies</strong> for supporting this research project. </div>
